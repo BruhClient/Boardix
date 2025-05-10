@@ -1,0 +1,2 @@
+ALTER TABLE "eventSchema" ADD COLUMN "endpointId" text NOT NULL;--> statement-breakpoint
+ALTER TABLE "eventSchema" ADD CONSTRAINT "eventSchema_endpointId_endpoints_id_fk" FOREIGN KEY ("endpointId") REFERENCES "public"."endpoints"("id") ON DELETE cascade ON UPDATE no action;

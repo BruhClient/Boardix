@@ -1,0 +1,1 @@
+ALTER TABLE "userSchema" ADD COLUMN "email" text;

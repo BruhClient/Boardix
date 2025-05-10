@@ -1,0 +1,1 @@
+ALTER TABLE "user" ADD COLUMN "monthlyUsage" numeric DEFAULT '0' NOT NULL;

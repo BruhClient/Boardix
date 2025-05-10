@@ -1,0 +1,1 @@
+ALTER TABLE "paymentSchema" ADD COLUMN "userId" text NOT NULL;

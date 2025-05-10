@@ -5,7 +5,7 @@ import authConfig from "./lib/auth-config"
 import { NextResponse } from "next/server"
 
 
-const apiRoutePrefix = "/api/auth"
+const authRoutePrefix = "/api/auth"
 const authRoutes = [
     "/signin" , 
     "/signup" , 
@@ -15,7 +15,9 @@ const authRoutes = [
 
 const publicRoutes = [
     "/", 
-    "/account-verification"
+    "/account-verification",
+    "/api/uploadthing",
+    
     
     
 ]
@@ -28,13 +30,19 @@ export default auth((req) => {
 
     const isLoggedIn = !!req.auth
 
-    if (nextUrl.pathname.includes(apiRoutePrefix)) { 
+    if (nextUrl.pathname.includes(authRoutePrefix)) { 
         return NextResponse.next()
     }
 
-    if (nextUrl.pathname.includes("/account-verification")) return NextResponse.next()
+    if (nextUrl.pathname.includes("/api/stripe/webhook")) { 
+        return NextResponse.next()
+    }
 
-    if (nextUrl.pathname.includes("/api/uploadthing")) return NextResponse.next()
+    if (nextUrl.pathname.includes("/api/ep")) { 
+        return NextResponse.next()
+    }
+
+   
 
     const isPublicRoute = publicRoutes.includes(nextUrl.pathname)
     const isAuthRoute = authRoutes.includes(nextUrl.pathname)
@@ -52,7 +60,7 @@ export default auth((req) => {
         if (isLoggedIn) { 
             return NextResponse.next()
         }
-        return NextResponse.redirect(new URL("/signup",nextUrl))
+        return NextResponse.redirect(new URL("/",nextUrl))
     } 
    
     

@@ -3,24 +3,27 @@
 import useSessionUser from "@/hooks/use-session-user";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "../ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-import { LogOut, Settings, Sparkles, User, Wallet } from "lucide-react";
+import { LogOut, Settings, Sparkles, User } from "lucide-react";
 import { signOut } from "next-auth/react";
 import { Skeleton } from "../ui/skeleton";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog";
 import EditProfileForm from "../forms/profile";
 import ProfileImageUploader from "../ProfileImageUploader";
+import { capitalizeFirstLetter } from "@/lib/utils";
+import EmbeddedCheckoutComponent from "../EmbeddedCheckoutComponent";
 
 function UserProfile() {
     const user = useSessionUser()
     
-    console.log(user    )
     if (!user) { 
         return <Skeleton className="w-10 aspect-square rounded-full" />
     }
 
+
     
     return ( <DropdownMenu>
-        <DropdownMenuTrigger>
+        <DropdownMenuTrigger className="flex items-center gap-3">
+            <div className="bg-primary text-xs px-2 py-1 rounded-sm font-semibold text-black flex items-center gap-1">{user.plan === "pro" && <Sparkles size={12} className="animate-pulse"/>}{capitalizeFirstLetter(user.plan)}</div>
             <Avatar className="w-10 h-10" >
                 <AvatarImage src={user.image} alt="Profile" className="object-cover" ></AvatarImage>
                 <AvatarFallback><User/></AvatarFallback>
@@ -41,10 +44,14 @@ function UserProfile() {
                 
             </div>
             <DropdownMenuSeparator />
-            <DropdownMenuItem >
-                <Sparkles /> Upgrade to Pro
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
+            {
+                user.plan === "free" && <>
+                <EmbeddedCheckoutComponent />
+                <DropdownMenuSeparator />
+                </>
+            }
+            
+            
             
 
                 <Dialog>
@@ -62,9 +69,7 @@ function UserProfile() {
                 </Dialog>
                 
            
-            <DropdownMenuItem >
-                <Wallet /> Billing
-            </DropdownMenuItem>
+            
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={() => signOut({
                 callbackUrl : "/signin"

@@ -1,6 +1,6 @@
 import NextAuth from "next-auth"
 import authConfig from "./auth-config"
-import { getUserById, getUserByUsername, updateUserByEmail, updateUserById } from "../server/db/users"
+import { getUserById, updateUserByEmail } from "../server/db/users"
 import {nanoid} from "nanoid"
 import { DrizzleAdapter } from "@auth/drizzle-adapter"
 import { accounts, userRoleEnum, users } from "@/db/schema"
@@ -55,6 +55,8 @@ export const { handlers : {GET , POST}, auth, signIn, signOut } = NextAuth({
           session.user.isOauth = token.isOauth as boolean
           session.user.role = token.role as typeof userRoleEnum
           session.user.name = token.name as string 
+          session.user.plan = token.plan as "free" | "pro"
+          session.user.monthlyUsage = token.monthlyUsage as number
 
       }
       return session
@@ -77,7 +79,9 @@ export const { handlers : {GET , POST}, auth, signIn, signOut } = NextAuth({
         isOauth : user?.isOauth, 
         image : user?.image, 
         email : user?.email, 
-        role : user?.role
+        role : user?.role, 
+        plan : user?.plan, 
+        monthlyUsage : user?.monthlyUsage
 
       }
     }

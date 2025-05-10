@@ -1,9 +1,8 @@
 
-import { sendVerificationEmail } from "@/server/db/auth/mail";
+
 import { getUserByEmail, updateUserByEmail } from "@/server/db/users";
-import { deleteVerificationTokenById, generateVerificationToken, getVerificationTokenByToken } from "@/server/db/auth/verification-token";
+import { deleteVerificationTokenById, getVerificationTokenByToken } from "@/server/db/auth/verification-token";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { CheckCircle, XCircle } from "lucide-react";
 import LinkButton from "../_components/linkButton";

@@ -30,33 +30,21 @@ export const getUserByEmail = async (email : string) => {
     }
     
 }
-export const getUserByUsername = async (username : string) => { 
-
-    try { 
-        const user = await db.select().from(users).where(eq(users.username ,username)).limit(1);
-
-        return user[0]
-    } catch { 
-        return null
-    }
-    
-}
 
 
 export const updateUserById = async (id : string, options :  User) => { 
     try { 
-        await db.update( users).set({
+        const user = await db.update( users).set({
             ...options
-        }).where(eq(users.id, id))
+        }).where(eq(users.id, id)).returning()
 
-
-        const user = await db.select().from(users).where(eq(users.id ,id)).limit(1);
 
 
        
 
         return user[0]
-    } catch { 
+    } catch(error) { 
+        console.log(error)
         return null
     }
 }

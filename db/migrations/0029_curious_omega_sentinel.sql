@@ -1,0 +1,1 @@
+ALTER TABLE "paymentSchema" DROP COLUMN "paymentId";

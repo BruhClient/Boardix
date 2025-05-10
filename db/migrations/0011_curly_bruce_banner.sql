@@ -1,0 +1,1 @@
+ALTER TABLE "projects" ADD COLUMN "apiKey" text NOT NULL;

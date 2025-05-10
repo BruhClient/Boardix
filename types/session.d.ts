@@ -8,7 +8,9 @@ export type  ExtendedUser = DefaultSession["user"] & {
     id : string,
     name : string,
     image : string, 
-    isOauth : boolean
+    isOauth : boolean, 
+    plan : "free" | "pro", 
+    monthlyUsage : number , 
     
 }
 

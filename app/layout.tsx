@@ -1,18 +1,20 @@
 import type { Metadata } from "next";
-import { Geist_Mono, Sofia_Sans } from "next/font/google";
+import { Inter, Manrope } from "next/font/google";
 import "./globals.css";
 import { SessionProvider } from "next-auth/react";
 import { ThemeProvider } from "@/components/ThemeProvider";
-import { ModeToggle } from "@/components/ModeToggle";
 import { Toaster } from 'react-hot-toast';
+import Navbar from "@/components/Navbar";
+import ReactQueryProvider from "@/components/ReactQueryProvider";
+import { ModeToggle } from "@/components/ModeToggle";
 
-const sofiaSans = Sofia_Sans({
-  variable: "--font-sofia-sans",
+const sofiaSans = Manrope({
+  variable: "--font-sans",
   subsets: ["latin"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-mono",
+const geistMono = Inter({
+  variable: "--font-serif",
   subsets: ["latin"],
 });
 
@@ -40,18 +42,26 @@ export default function RootLayout({
         enableSystem
         disableTransitionOnChange
         >
-          
-        <SessionProvider>
-         
-          {authModal}
-          {children}
-          <Toaster />
-  
-        </SessionProvider>
+          <ReactQueryProvider>
 
-        <div className="fixed bottom-4 right-4">
-          <ModeToggle />
-        </div>
+          
+          <SessionProvider>
+          <div className="fixed inset-0 -z-10 h-full w-full bg-background bg-[linear-gradient(to_right,#8080800a_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-[size:14px_24px]"></div>
+          
+          
+            <Navbar />
+            {authModal}
+            {children}
+            <Toaster />
+
+            <div className="fixed bottom-4 left-5">
+              <ModeToggle />
+            </div>
+          </SessionProvider>
+         
+        </ReactQueryProvider>
+
+        
         </ThemeProvider>
       </body>
 

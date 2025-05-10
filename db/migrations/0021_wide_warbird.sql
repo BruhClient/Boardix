@@ -1,0 +1,1 @@
+ALTER TABLE "userSchema" DROP COLUMN "email";

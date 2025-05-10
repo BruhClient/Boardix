@@ -1,0 +1,1 @@
+ALTER TABLE "paymentSchema" ADD COLUMN "duplicate" boolean DEFAULT false NOT NULL;

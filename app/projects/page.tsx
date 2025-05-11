@@ -1,5 +1,5 @@
 
-import React from 'react'
+import React, { Suspense } from 'react'
 import ProjectSearchBar from './_components/ProjectSearchBar'
 import AddProjectButton from './_components/AddProjectButton'
 import ProjectGrid from './_components/ProjectGrid'
@@ -13,10 +13,14 @@ const ProjectPage = () => {
             </div>
             <AddProjectButton />
         </div>
+        <Suspense>
+          <ProjectSearchBar />
+        </Suspense>
         
-        <ProjectSearchBar />
-
-        <ProjectGrid />
+        <Suspense fallback="loading...">
+          <ProjectGrid />
+        </Suspense>
+       
       
 
     </div>

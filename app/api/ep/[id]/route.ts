@@ -5,17 +5,25 @@ import { decrypt } from '@/lib/encrypt';
 import { formatInputBody } from '@/lib/formatting';
 import { getUserById } from '@/server/db/users';
 import {  eq, sql } from 'drizzle-orm';
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 
 
-
+const updateUser = async (id : string) => { 
+  await db
+          .update(users)
+          .set({
+            monthlyUsage: sql<number>`${users.monthlyUsage} + 1`,
+          })
+  .where(eq(users.id, id));
+  
+}
 
 export async function POST(
-  req: Request, { params }: { params: { id: string } }
+  req: NextRequest, { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const body = await req.json();
-    const { id : endpointId } = params;
+    const { id : endpointId } =  await params;
     
 
 
@@ -86,12 +94,8 @@ export async function POST(
 
         if (duplicate) { 
           const data = await db.update(userSchema).set({endpointId,...res.data}).returning()
-          await db
-          .update(users)
-          .set({
-            monthlyUsage: sql<number>`${users.monthlyUsage} + 1`,
-          })
-          .where(eq(users.id, projectOwnerId));
+          
+          await updateUser(projectOwnerId)
           return new NextResponse(
             JSON.stringify({ message: `Updated user with userId ${data[0].userId} in ${EndpointName}`, user : data[0] }),
             { status: 200 }
@@ -104,12 +108,7 @@ export async function POST(
 
         //@ts-ignore
         const data = await db.insert(userSchema).values({endpointId,...res.data,authorId : projectOwnerId}).returning();
-        await db
-        .update(users)
-        .set({
-          monthlyUsage: sql<number>`${users.monthlyUsage} + 1`,
-        })
-        .where(eq(users.id, projectOwnerId));
+        await updateUser(projectOwnerId)
         return new NextResponse(
           JSON.stringify({ message: `Added 1 user into ${EndpointName}`, user : data[0] }),
           { status: 200 }
@@ -117,9 +116,7 @@ export async function POST(
         
       }
       case "Subscription": {
-        console.log("Hello")
         const {userId ,amount , email ,region,type } = body
-        console.log(body)
         if (!userId) { 
             throw Error("Missing userId")
         }
@@ -135,15 +132,9 @@ export async function POST(
         const duplicate = await db.query.subscriptionSchema.findFirst({ 
           where : eq(subscriptionSchema.userId,userId)
         })
-        console.log("Hello")
         if (duplicate) { 
           const data = await db.update(subscriptionSchema).set({endpointId,...res.data , type : type.toLowerCase()}).returning()
-          await db
-          .update(users)
-          .set({
-            monthlyUsage: sql<number>`${users.monthlyUsage} + 1`,
-          })
-          .where(eq(users.id, projectOwnerId));
+          await updateUser(projectOwnerId)
           return new NextResponse(
             JSON.stringify({ message: `Updated Subscription with userId ${data[0].userId} in ${EndpointName}`, user : data[0] }),
             { status: 200 }
@@ -156,12 +147,7 @@ export async function POST(
 
         //@ts-ignore
         const data = await db.insert(subscriptionSchema).values({endpointId,...res.data,authorId : projectOwnerId , type : type.toLowerCase()}).returning();
-        await db
-        .update(users)
-        .set({
-          monthlyUsage: sql<number>`${users.monthlyUsage} + 1`,
-        })
-        .where(eq(users.id, projectOwnerId));
+        await updateUser(projectOwnerId)
         return new NextResponse(
           JSON.stringify({ message: `Added 1 Subscription into ${EndpointName}`, user : data[0] }),
           { status: 200 }
@@ -188,12 +174,7 @@ export async function POST(
 
          //@ts-ignore
         const data = await db.insert(paymentSchema).values({endpointId,...res.data,authorId : projectOwnerId}).returning();
-        await db
-        .update(users)
-        .set({
-          monthlyUsage: sql<number>`${users.monthlyUsage} + 1`,
-        })
-        .where(eq(users.id, projectOwnerId)).returning();
+        await updateUser(projectOwnerId)
         return new NextResponse(
           JSON.stringify({ message: `Added 1 payment into ${EndpointName}`, payment : data[0] }),
           { status: 200 }
@@ -215,12 +196,7 @@ export async function POST(
 
          //@ts-ignore
         const data = await db.insert(eventSchema).values({endpointId,...res.data,authorId : projectOwnerId}).returning();
-        await db
-        .update(users)
-        .set({
-          monthlyUsage: sql<number>`${users.monthlyUsage} + 1`,
-        })
-        .where(eq(users.id, projectOwnerId));
+        await updateUser(projectOwnerId)
         return new NextResponse(
           JSON.stringify({ message: `Added 1 event into ${EndpointName}`, payment : data[0] }),
           { status: 200 }

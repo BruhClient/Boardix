@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Suspense } from 'react'
 import SchemaSearchbar from './_component/SchemaSearchbar'
 import SchemaGrid from './_component/SchemaGrid'
 
@@ -20,10 +20,14 @@ const SchemaPage = () => {
                         <span className='text-foreground pr-2'>*</span> indicates that field must be provided
                     </div>
               </div>
-        
-      <SchemaSearchbar />
+      <Suspense>
+        <SchemaSearchbar />
+      </Suspense>
       
-      <SchemaGrid />
+      <Suspense fallback="loading...">
+        <SchemaGrid />
+      </Suspense>
+      
     </div>
   )
 }

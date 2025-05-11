@@ -2,7 +2,7 @@
 
 import { auth } from "@/lib/auth"
 import { sendVerificationEmail } from "@/server/db/auth/mail"
-import { getUserByEmail, getUserByUsername, updateUserByEmail } from "@/server/db/users"
+import { getUserByEmail, updateUserByEmail } from "@/server/db/users"
 import { generateVerificationToken } from "@/server/db/auth/verification-token"
 import { EditProfilePayload, EditProfileSchema } from "@/schema/edit-profile"
 
